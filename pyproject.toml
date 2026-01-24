@@ -1,0 +1,30 @@
+[project]
+name = "lgaimers-lab"
+version = "0.1.0"
+description = "LGAimers Lab - EXAONE Model Compression & Analysis"
+readme = "README.md"
+requires-python = ">=3.11, <3.12"
+dependencies = [
+    "hydra-core",
+    "mlflow",
+    "numpy",
+    "pandas",
+    "scipy",
+    "torch",
+    "tqdm",
+    "transformers",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "jupyter",
+    "pytest",
+    "ruff",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/models", "src/utils"]
