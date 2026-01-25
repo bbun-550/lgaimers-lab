@@ -1,11 +1,33 @@
 defaults:
   - _self_
-  - experiments: null
+  - experiments: null  # 실험 설정 파일이 있으면 여기서 로드됩니다.
 
 hydra:
   run:
+    # 실행할 때마다 날짜/시간별로 결과 폴더가 자동 생성됩니다.
     dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
 
+# 기본 실험 이름 (실험별로 변경하세요)
 experiment_name: "baseline"
+
+# 모델 기본 설정
 model:
   name: "exaone"
+  hidden_dim: 768
+  num_layers: 12
+  num_heads: 12
+
+# 학습 기본 설정
+training:
+  batch_size: 16
+  learning_rate: 1e-4
+  epochs: 3
+  seed: 42
+
+# 데이터셋 경로
+data_dir: "data/processed"
+
+# 압축(경량화) 설정 - 기본은 '없음'
+compression:
+  method: null
+  ratio: 0.0

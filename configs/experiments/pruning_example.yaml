@@ -1,0 +1,21 @@
+# @package _global_
+
+# 이 파일은 'config.yaml'의 내용을 덮어씁니다.
+# 사용법: make train experiment=pruning_example
+
+experiment_name: "pruning_experiment_v1"
+
+# 모델 파라미터 변경
+model:
+  hidden_dim: 768  # 그대로 유지
+  num_layers: 9    # 12 -> 9로 줄임 (Layer Drop)
+
+# 학습 파라미터 변경
+training:
+  epochs: 5        # 에폭 수 증가
+  batch_size: 32   # 배치 사이즈 증가
+
+# 경량화 전략 명시
+compression:
+  method: "layer_drop"
+  ratio: 0.25      # 25% 제거

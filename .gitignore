@@ -22,6 +22,7 @@ multirun/
 
 # MLflow 로그
 mlruns/
+mlflow.db
 
 # OS 및 IDE 설정 (OS & IDE Settings)
 # macOS 썸네일 캐시
