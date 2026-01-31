@@ -1,4 +1,4 @@
-# LGAimers Lab
+# LGAimers-Lab
 
 ## 시작하기
 
