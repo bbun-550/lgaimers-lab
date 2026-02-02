@@ -23,14 +23,35 @@ class ExaoneBase:
             else:
                 device = "cpu"
 
+        self.device = device
         print(f"Loading model on device: {device}")
         
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype=torch.bfloat16,
-            device_map=device,
-            trust_remote_code=True
-        )
+        # 디바이스별 최적 로딩 방식 분기
+        if device == "mps":
+            # macOS MPS: device_map 미지원, .to() 사용
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                torch_dtype=torch.bfloat16,
+                trust_remote_code=True
+            ).to(device)
+        else:
+            # CUDA/CPU: device_map 사용 가능 (accelerate 권장)
+            try:
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    torch_dtype=torch.bfloat16,
+                    device_map=device if device == "cuda" else "auto",
+                    trust_remote_code=True
+                )
+            except ValueError:
+                # accelerate 미설치 시 fallback
+                print("Warning: 'accelerate' not installed. Using .to(device) fallback.")
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    torch_dtype=torch.bfloat16,
+                    trust_remote_code=True
+                ).to(device)
+        
         # Ensure model is in eval mode by default for generation
         self.model.eval()
 
@@ -50,8 +71,7 @@ class ExaoneBase:
         )
         
         # Move inputs to the same device as model
-        if hasattr(self.model, "device"):
-            input_ids = input_ids.to(self.model.device)
+        input_ids = input_ids.to(self.device)
 
         with torch.no_grad():
             output = self.model.generate(
@@ -64,7 +84,6 @@ class ExaoneBase:
         return self.tokenizer.decode(output[0], skip_special_tokens=True)
 
 if __name__ == "__main__":
-    # Test the implementation
     exaone = ExaoneBase()
     
     test_prompts = [

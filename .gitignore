@@ -39,3 +39,7 @@ mlflow.db
 *.pth
 *.ckpt
 *.safetensors
+
+# submit
+submit.zip
+submit/
