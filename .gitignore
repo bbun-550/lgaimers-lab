@@ -40,6 +40,6 @@ mlflow.db
 *.ckpt
 *.safetensors
 
-# 제출 파일
-submit.zip
+# submit
+*.zip
 submit/

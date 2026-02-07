@@ -1,6 +1,6 @@
 defaults:
   - _self_
-  - experiments: null  # 실험 설정 파일이 있으면 여기서 로드됩니다.
+  - experiments: null # 실험 설정 파일이 있으면 여기서 로드됩니다.
 
 hydra:
   run:
@@ -29,5 +29,14 @@ data_dir: "data/processed"
 
 # 압축(경량화) 설정 - 기본은 '없음'
 compression:
-  method: null
-  ratio: 0.0
+  method: null # "drop_layers", "prune_heads", "reduce_hidden"
+  keep_layers: 26
+  drop_from: "top" # "top" or "bottom"
+  keep_heads: 24
+  keep_kv_heads: 8
+  prune_kv: true
+  target_dim: 1536
+  target_intermediate_size: 3072
+  dtype: "float16" # "float16", "bfloat16"
+# 저장 경로
+save_path: "./submit/model"

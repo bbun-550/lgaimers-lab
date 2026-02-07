@@ -1,7 +1,7 @@
 PYTHON := uv run python
 SRC := src
 
-.PHONY: help setup preprocess analyze train eval report clean
+.PHONY: help setup preprocess analyze train eval eval-model report clean
 
 help:
 	@echo "Available commands:"
@@ -9,7 +9,8 @@ help:
 	@echo "  make preprocess   - Data preprocessing"
 	@echo "  make analyze      - Analyze model parameters & size"
 	@echo "  make train        - Train model (with compression)"
-	@echo "  make eval         - Evaluate accuracy / precision"
+	@echo "  make eval         - Evaluate baseline model"
+	@echo "  make eval-model   - Evaluate compressed model (submit/model)"
 	@echo "  make report       - Generate comparison report"
 	@echo "  make clean        - Clean outputs & logs"
 
@@ -28,10 +29,13 @@ train:
 	$(PYTHON) $(SRC)/models/train.py --config-name=config
 
 eval:
-	$(PYTHON) $(SRC)/evaluation/evaluate.py --config-name=config
+	$(PYTHON) $(SRC)/evaluation/evaluate.py --baseline
+
+eval-model:
+	$(PYTHON) $(SRC)/evaluation/evaluate.py --model ./submit/model
 
 report:
-	$(PYTHON) $(SRC)/compression/report.py --config-name=config
+	$(PYTHON) $(SRC)/compression/report.py
 
 # Utils
 clean:

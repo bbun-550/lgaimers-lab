@@ -1,0 +1,24 @@
+# 경량화 설정
+
+# Layer Dropping
+drop_layers:
+  enabled: false
+  keep_layers: 26
+  drop_from: "top" # "top" or "bottom"
+
+# Head Pruning
+prune_heads:
+  enabled: false
+  keep_heads: 24
+  prune_ratio: 0.25
+
+# Hidden Dimension 축소
+reduce_hidden:
+  enabled: false
+  target_dim: 1536
+  reduction_ratio: 0.75
+
+# Quantization
+quantization:
+  enabled: false
+  dtype: "int8" # "int8" or "int4"
