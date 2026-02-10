@@ -16,17 +16,30 @@ import os
 import time
 import json
 import torch
-import mlflow
+from pathlib import Path
 from dotenv import load_dotenv
 
-# .env 파일에서 환경변수 로드 (MLflow 인증 정보)
-load_dotenv()
+# ⚠️ IMPORTANT: .env 로드를 mlflow import 전에 수행해야 함!
+# 프로젝트 루트의 .env 파일 경로를 명시적으로 지정
+_PROJECT_ROOT = Path(__file__).parent.parent.parent  # src/evaluation -> src -> lgaimers-lab
+_ENV_PATH = _PROJECT_ROOT / ".env"
+load_dotenv(_ENV_PATH, override=True)  # override=True로 기존 환경변수 덮어씀
+print(f"📁 Loaded .env from: {_ENV_PATH}")
+
+# 환경변수 명시적 설정 (DagsHub HTTP Basic Auth 필요)
+if os.getenv("MLFLOW_TRACKING_USERNAME") and os.getenv("MLFLOW_TRACKING_PASSWORD"):
+    os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME")
+    os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
+    print(f"🔑 Credentials set for: {os.getenv('MLFLOW_TRACKING_USERNAME')}")
+
+# 이제 mlflow import (환경변수가 설정된 후)
+import mlflow
 
 # DagsHub MLflow 설정
 if os.getenv("MLFLOW_TRACKING_URI"):
     mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
     print(f"📡 MLflow tracking: {os.getenv('MLFLOW_TRACKING_URI')}")
-from pathlib import Path
+
 from typing import Optional
 from dataclasses import dataclass, asdict
 from transformers import AutoModelForCausalLM, AutoTokenizer
